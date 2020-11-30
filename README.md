@@ -48,6 +48,41 @@ _Connector actions_:
 
 [getTimeEntries](#getTimeEntries) Get TimeEntries objects
 
+[getCurrentTimeEntry](#getCurrentTimeEntry) Get current running TimeEntries
+
+[getTimeEntryData](#getTimeEntryData) Get TimeEntry Data
+
+[createTimeEntry](#createTimeEntry) Create TimeEntry
+
+[startTimeEntry](#startTimeEntry) Start TimeEntry
+
+[stopTimeEntry](#stopTimeEntry) Stop TimeEntry
+
+[updateTimeEntry](#updateTimeEntry) Update TimeEntry
+
+[updateTimeEntriesTags](#updateTimeEntriesTags) Update TimeEntries Tags
+
+[deleteTimeEntry](#deleteTimeEntry) Delete TimeEntry
+
+[getUserData](#getUserData) Get UserData
+
+[updateUserData](#updateUserData) Update UserData
+
+[resetApiToken](#resetApiToken) Reset Api Token
+
+[changeUserPassword](#changeUserPassword) Change User Password
+
+[createClient](#createClient) Create Client
+
+[getClients](#getClients) Get Clients
+
+[getCgetClientDatalients](#getClientData) Get Client's Data
+
+[updateClient](#updateClient) Update Client
+
+[deleteClient](#deleteClient) Delete Client
+
+
 
 _SDK_:
 
@@ -145,6 +180,36 @@ More details about ProjectData available [here](https://github.com/toggl/toggl_a
 
 #### Connector events
 
+##### <a name="TimeEntryAdded"></a>TimeEntry Added event
+
+_Event parameters:_
+
+```
+
+```
+
+_Handler inputs:_
+
+```
+timeEntry: TimeEntry - TimeEntry info
+```
+
+_Example:_
+
+```js
+async (timeEntry) => {
+  console.log('TimeEntry Added:')
+  console.log('  Id:', timeEntry.id)
+  console.log('  Start:', timeEntry.start)
+  console.log('  Stop:', timeEntry.stop)
+  console.log('  Description:', timeEntry.description)
+}
+```
+
+This event is triggered once whenever a new TimeEntry is added to the Toggl board.
+
+The `timeEntry` info argument has the [following format](_TimeEntry:_)
+
 ##### <a name="TimeEntryModified"></a>TimeEntry Modified event
 
 _Event parameters:_
@@ -176,6 +241,38 @@ Toggl board is modified.
 
 The `timeEntry` info argument has the [following format](_TimeEntry:_)
 
+
+##### <a name="TimeEntryRemoved"></a>TimeEntry Removed event
+
+_Event parameters:_
+
+```
+
+```
+
+_Handler inputs:_
+
+```
+timeEntry: TimeEntry - TimeEntry info
+```
+
+_Example:_
+
+```js
+async (timeEntry) => {
+  console.log('TimeEntry Removed:')
+  console.log('  Id:', timeEntry.id)
+  console.log('  Start:', timeEntry.start)
+  console.log('  Stop:', timeEntry.stop)
+  console.log('  Description:', timeEntry.description)
+}
+```
+
+This event is triggered once whenever a TimeEntry is removed from the
+Toggl board.
+
+The `timeEntry` info argument has the [following format](_TimeEntry:_)
+
 #### Connector actions
 
 ##### <a name="getTimeEntries"></a>Get TimeEntries action
@@ -187,8 +284,6 @@ _Definition:_
   endDate?: string | number | Date | Moment
 ) => object[]
 ```
-If start_date and end_date are not specified, time entries started during the last 9 days are returned. 
-The limit of returned time entries is 1000.
 
 _Usage:_
 
@@ -197,6 +292,8 @@ const timeEntries = await togglConnector.getTimeEntries('2021-01-01T09:00:00.000
 ```
 
 Get a list of [TimeEntries](_TimeEntry:_) in Toggl board.
+If start_date and end_date are not specified, time entries started during the last 9 days are returned. 
+The limit of returned time entries is 1000.
 
 ##### <a name="getCurrentTimeEntry"></a>Get current running TimeEntries action
 
@@ -205,49 +302,307 @@ _Definition:_
 ```ts
 () => object
 ```
-Get current running time entry
 
 _Usage:_
 
 ```js
-const timeEntries = await togglConnector.getCurrentTimeEntry()
+const timeEntry = await togglConnector.getCurrentTimeEntry()
 ```
 
-Get an object of [TimeEntry](_TimeEntry:_).
+Get the current running [TimeEntry](_TimeEntry:_).
 
-##### <a name="getTimeEntryData"></a>Get TimeEntriy Data action
+##### <a name="getTimeEntryData"></a>Get TimeEntry Data action
 
 _Definition:_
 
 ```ts
 (teId: number | string) => object
 ```
-Get time entry data
 
 _Usage:_
 
 ```js
-const timeEntries = await togglConnector.getTimeEntryData(1783760282)
+const timeEntry = await togglConnector.getTimeEntryData(1783760282)
 ```
 
-Get an object of [TimeEntry](_TimeEntry:_).
+Get a [TimeEntry](_TimeEntry:_) data by ID.
 
-##### <a name="createTimeEntry"></a>Create TimeEntriy action
+##### <a name="createTimeEntry"></a>Create TimeEntry action
 
 _Definition:_
 
 ```ts
 (timeEntry: TimeEntry) => object
 ```
-Get time entry data
 
 _Usage:_
 
 ```js
-const timeEntries = await togglConnector.createTimeEntry(1783760282)
+const timeEntry = await togglConnector.createTimeEntry({
+    start:'2020-11-20T09:00:00.000Z',
+    stop : '2020-11-20T11:00:00.000Z',
+    description : 'Design meeting',
+    tags : ["Design", "Meetings"]})
 ```
 
-Get an object of [TimeEntry](_TimeEntry:_).
+Create a new [TimeEntry](_TimeEntry:_).
+
+##### <a name="startTimeEntry"></a>Start TimeEntry action
+
+_Definition:_
+
+```ts
+(timeEntry: TimeEntry) => object
+```
+
+_Usage:_
+
+```js
+const timeEntry = await togglConnector.startTimeEntry({
+    start:'2020-11-20T09:00:00.000Z',
+    stop : '2020-11-20T11:00:00.000Z',
+    description : 'Design meeting',
+    tags : ["Design", "Meetings"]})
+```
+
+Start a new [TimeEntry](_TimeEntry:_).
+
+##### <a name="stopTimeEntry"></a>Stop TimeEntry action
+
+_Definition:_
+
+```ts
+(teId: number | string) => object
+```
+
+_Usage:_
+
+```js
+const timeEntry = await togglConnector.stopTimeEntry(1778035860)
+```
+
+Stop running [TimeEntry](_TimeEntry:_).
+
+
+##### <a name="updateTimeEntry"></a>Update TimeEntry action
+
+_Definition:_
+
+```ts
+(teId: number | string, timeEntry: TimeEntry) => object
+```
+
+_Usage:_
+
+```js
+const timeEntry = await togglConnector.updateTimeEntry(1778035860, {
+    start:'2020-11-21T09:00:00.000Z',
+    stop : '2020-11-21T11:00:00.000Z',
+    description : 'Postponed Design meeting',
+    tags : ["Design", "Meetings"]})
+```
+
+Update [TimeEntry](_TimeEntry:_) data.
+
+
+##### <a name="updateTimeEntriesTags"></a>Update TimeEntries Tags action
+
+_Definition:_
+
+```ts
+(teIds: number[] | string[], tags: string[], action: string) => object
+```
+
+_Usage:_
+
+```js
+const timeEntry = await togglConnector.updateTimeEntriesTags([1778035860, 1778035860],['tag-1','tag-2'], 'add')
+```
+
+Assign and remove tags from [timeEntries](_TimeEntry:_).
+action: possible values: add, remove
+
+
+##### <a name="deleteTimeEntry"></a>Delete TimeEntry action
+
+_Definition:_
+
+```ts
+(teId: number | string) => object
+```
+
+_Usage:_
+
+```js
+const timeEntry = await togglConnector.deleteTimeEntry(1778035860)
+```
+
+Delete [timeEntry](_TimeEntry:_).
+
+
+
+
+
+##### <a name="getUserData"></a>Get UserData action
+
+_Definition:_
+
+```ts
+() => object
+```
+
+_Usage:_
+
+```js
+const userData = await togglConnector.getUserData()
+```
+
+Get current [UserData](https://github.com/toggl/toggl_api_docs/blob/master/chapters/users.md).
+
+
+##### <a name="updateUserData"></a>Update UserData action
+
+_Definition:_
+
+```ts
+(userData: UserData) => object
+```
+
+_Usage:_
+
+```js
+const userData = await togglConnector.updateUserData({
+    id: 4898995,
+    email: 'user@gmail.com',
+    send_product_emails: true,
+    send_weekly_report: true,
+    send_timer_notifications: true
+  })
+```
+
+Update current [UserData](_UserData:_).
+
+
+##### <a name="resetApiToken"></a>Reset Api Token action
+
+_Definition:_
+
+```ts
+() => string
+```
+
+_Usage:_
+
+```js
+const token = await togglConnector.resetApiToken()
+```
+
+Reset current [UserData](_UserData:_) API Token.
+
+##### <a name="changeUserPassword"></a>Change User Password action
+
+_Definition:_
+
+```ts
+() => object
+```
+
+_Usage:_
+
+```js
+const userData = await togglConnector.changeUserPassword(currentPassword: string, password: string)
+```
+
+
+##### <a name="createClient"></a>Create Client action
+
+_Definition:_
+
+```ts
+(clientData: ClientData) => object
+```
+
+_Usage:_
+
+```js
+const clientData = await togglConnector.createClient({
+    name: 'Builders LTD',
+    notes: 'Important client',
+    wid: 4869303
+  })
+```
+
+Create new [Client](ClientData:_).
+
+
+##### <a name="getClients"></a>Get Clients action
+
+_Definition:_
+
+```ts
+() => object
+```
+
+_Usage:_
+
+```js
+const clientsData = await togglConnector.getClients()
+```
+
+Get all [Clients](ClientData:_) data.
+
+
+##### <a name="getClientData"></a>Get Client Data action
+
+_Definition:_
+
+```ts
+(clientId: number | string) => object
+```
+
+_Usage:_
+
+```js
+const clientData = await togglConnector.getClientData(5869111)
+```
+
+Get [Client](ClientData:_) data by ID.
+
+##### <a name="updateClient"></a>Update Client Data action
+
+_Definition:_
+
+```ts
+(clientId: number | string, clientData: ClientData) => object
+```
+
+_Usage:_
+
+```js
+const clientData = await togglConnector.updateClient(5869111, {
+    name: 'Builders One LTD',
+    notes: 'Very important client',
+    wid: 4869303
+  })
+```
+
+Update [Client](ClientData:_) data.
+
+##### <a name="deleteClient"></a>Delete Client Data action
+
+_Definition:_
+
+```ts
+(clientId: number) => object
+```
+
+_Usage:_
+
+```js
+const clientData = await togglConnector.deleteClient(5869111)
+```
+
+Delete [Client](ClientData:_).
 
 #### SDK
 
@@ -255,9 +610,7 @@ Get an object of [TimeEntry](_TimeEntry:_).
 _Definition:_
 
 ```ts
-(
-  options ?: object,
-) => object
+(options ?: object) => object
 ```
 
 _Usage:_

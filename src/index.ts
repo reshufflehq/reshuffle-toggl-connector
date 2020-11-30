@@ -195,9 +195,9 @@ export class TogglConnector extends CoreConnector {
   }
 
   // Users //
-  async getUserData(user: UserData) {
+  async getUserData() {
     const getUserData = pify(this.client.getUserData.bind(this.client), { multiArgs: true })
-    const [data] = await getUserData(user)
+    const [data] = await getUserData({})
     return data
   }
 
