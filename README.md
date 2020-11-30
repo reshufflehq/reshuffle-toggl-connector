@@ -41,8 +41,6 @@ app.start(8000)
 
 _Connector events_:
 
-[TimeTrackerInitialized](#TimeTrackerInitialized) TimeTracker Initialized
-
 [TimeEntryModified](#TimeEntryModified) TimeTracker Modified
 
 
@@ -146,21 +144,6 @@ More details about ProjectData available [here](https://github.com/toggl/toggl_a
 
 
 #### Connector events
-
-##### <a name="TimeTrackerInitialized"></a>TimeTracker Initialized event
-
-_Example:_
-
-```js
-async (objects) => {
-  console.log(objects)
-}
-```
-
-This event is fired when the connector starts tracking a specific Toggl
-Timer board. More technically, it is fired when the connector first reads
-the content of an Toggl board and does not have a previous record of its
-object in its internal database.
 
 ##### <a name="TimeEntryModified"></a>TimeEntry Modified event
 

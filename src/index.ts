@@ -30,8 +30,7 @@ export class TogglConnector extends CoreConnector {
     handler: CoreEventHandler,
     eventId?: string,
   ) {
-    if (options.type !== 'TimeTrackerInitialized' &&
-      options.type !== 'TimeEntryAdded' &&
+    if (options.type !== 'TimeEntryAdded' &&
       options.type !== 'TimeEntryModified' &&
       options.type !== 'TimeEntryRemoved') {
       throw new Error(`Invalid event type: ${options.type}`)
@@ -51,10 +50,10 @@ export class TogglConnector extends CoreConnector {
     )
 
     if (!oldObjects) {
-      await this.eventManager.fire(
-        (ec) => ec.options.type === 'TimeTrackerInitialized',
-        { objects: newObjects },
-      )
+      // await this.eventManager.fire(
+      //   (ec) => ec.options.type === 'TimeTrackerInitialized',
+      //   { objects: newObjects },
+      // )
       return
     }
 
@@ -398,7 +397,6 @@ export interface ProjectData {
 }
 
 export type TogglEvent =
-  | 'TimeTrackerInitialized'
   | 'TimeEntryAdded'
   | 'TimeEntryModified'
   | 'TimeEntryRemoved'
