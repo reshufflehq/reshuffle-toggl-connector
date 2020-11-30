@@ -1,33 +1,32 @@
 import { Reshuffle, BaseConnector, EventConfiguration } from 'reshuffle-base-connector'
 import { CoreConnector, CoreEventHandler, Options } from './CoreConnector'
-import { nanoid } from 'nanoid'
 import { Moment } from 'moment'
 import pify from 'pify'
 
 var TogglClient = require('toggl-api');
 
-interface EventOptions {
-  type: string
-}
+const TOGGL_STORAGE_KEY = 'TOGGL_STORAGE_KEY'
 
 export interface TogglConnectorConfigOptions {
   token: string
 }
 
+export interface TogglConnectorEventOptions {
+  type: TogglEvent
+}
+
 export class TogglConnector extends CoreConnector {
 
   private client: any
-  private token: string
 
-  constructor(app: Reshuffle, options: Options, id?: string) {
+  constructor(app: Reshuffle, options: TogglConnectorConfigOptions, id?: string) {
     super(app, options, id)
-    this.token = options.token
-    this.client = new TogglClient({ apiToken: this.token })
+    this.client = new TogglClient({ apiToken: options.token })
   }
 
   // Events /////////////////////////////////////////////////////////
   public on(
-    options: EventOptions,
+    options: TogglConnectorEventOptions,
     handler: CoreEventHandler,
     eventId?: string,
   ) {
@@ -39,7 +38,7 @@ export class TogglConnector extends CoreConnector {
     }
 
     if (!eventId) {
-      eventId = `TOGGL/${this.id}/${eventId ? eventId : nanoid()}`
+      eventId = `TOGGL/${options.type}/${this.id}`
     }
     const eid = eventId
     return this.eventManager.addEvent(options, handler, eid)
@@ -47,7 +46,7 @@ export class TogglConnector extends CoreConnector {
 
   protected async onInterval() {
     const [oldObjects, newObjects] = await this.store.update(
-      this.token,
+      TOGGL_STORAGE_KEY,
       () => this.getTimeEntriesRecords()
     )
 
@@ -201,13 +200,13 @@ export class TogglConnector extends CoreConnector {
   }
 
   // Users //
-  async getUserData(user: User) {
+  async getUserData(user: UserData) {
     const getUserData = pify(this.client.getUserData.bind(this.client), { multiArgs: true })
     const [data] = await getUserData(user)
     return data
   }
 
-  async updateUserData(user: User): Promise<any> {
+  async updateUserData(user: UserData): Promise<any> {
     const updateUserData = pify(this.client.updateUserData.bind(this.client), { multiArgs: true })
     try {
       const [data] = await updateUserData(user)
@@ -355,7 +354,7 @@ export interface TimeEntry {
 
 type TimeEntryRecord = Record<number, TimeEntry>
 
-export interface User {
+export interface UserData {
   id: number,
   email: string,
   password: string,
@@ -397,3 +396,9 @@ export interface ProjectData {
   rate: number,
   created_at: string
 }
+
+export type TogglEvent =
+  | 'TimeTrackerInitialized'
+  | 'TimeEntryAdded'
+  | 'TimeEntryModified'
+  | 'TimeEntryRemoved'

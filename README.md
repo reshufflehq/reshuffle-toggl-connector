@@ -37,6 +37,8 @@ app.start(8000)
 
 [Configuration](#configuration) Configuration options
 
+[DataTypes](#dataTypes) Data Types
+
 _Connector events_:
 
 [TimeTrackerInitialized](#TimeTrackerInitialized) TimeTracker Initialized
@@ -61,6 +63,86 @@ const togglConnector = new TogglConnector(app, {
   token: string
 })
 ```
+
+##### <a name="dataTypes"></a>DataTypes
+
+<a name="_TimeEntry:_"></a>_TimeEntry:_
+
+```ts
+{
+  id: number,
+  wid: null | number, // Workspace ID required if pid or tid not supplied
+  pid: null | number, // Project ID
+  pid: null | number, // Task ID
+  billable: boolean, // Default false, available for pro workspaces
+  start: string, // ISO 8601 date and time e.g. '2021-01-21T09:00:00Z'
+  stop: string, // ISO 8601 date and time
+  duration: number,
+  description: string,
+  tags: Array<string>,
+  at: string
+}
+```
+More details about TimeEntry available [here](https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md) 
+
+_UserData:_
+
+```ts
+{
+  id: number,
+  email: string,
+  password: string,
+  timezone: string,
+  fullname: string,
+  send_product_emails: boolean
+  send_weekly_report: boolean
+  send_timer_notifications: boolean
+  store_start_and_stop_time: boolean
+  beginning_of_week: number // in the range of 0-6
+  timeofday_format: string, // Two formats are supported:
+                            // "H:mm" for 24-hour format
+                            // "h:mm A" for 12-hour format (AM/PM)
+  date_format: string // possible values: "YYYY-MM-DD", "DD.MM.YYYY", "DD-MM-YYYY", "MM/DD/YYYY", "DD/MM/YYYY", "MM-DD-YYYY"
+}
+```
+More details about UserData available [here](https://github.com/toggl/toggl_api_docs/blob/master/chapters/users.md) 
+
+_ClientData:_
+
+```ts
+{
+  id: number,
+  name: string,
+  wid: null | number,
+  notes: string,
+  at: string
+}
+```
+More details about ClientData available [here](https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md) 
+
+
+_ProjectData:_
+
+```ts
+{
+  id: number,
+  name: string,
+  wid: null | number,
+  cid: null | number,
+  active: boolean,
+  is_private: boolean,
+  template: boolean,
+  template_id: number,
+  billable: boolean,
+  auto_estimates: boolean,
+  estimated_hours: number,
+  at: string,
+  color: string,
+  rate: number, 
+  created_at: string
+}
+```
+More details about ProjectData available [here](https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md) 
 
 
 #### Connector events
@@ -109,24 +191,7 @@ async (timeEntry) => {
 This event is triggered once whenever the content of a TimeEntry in the
 Toggl board is modified.
 
-The `timeEntry` info argument has the following format:
-
-```ts
-{
-  id: number,
-  wid: null | number,
-  pid: null | number,
-  billable: boolean,
-  start: string,
-  stop: string,
-  duration: number,
-  description: string,
-  tags: Array<string>,
-  at: string
-}
-```
-
-
+The `timeEntry` info argument has the [following format](_TimeEntry:_)
 
 #### Connector actions
 
@@ -148,12 +213,58 @@ _Usage:_
 const timeEntries = await togglConnector.getTimeEntries('2021-01-01T09:00:00.000Z', '2021-01-05T17:00:00.000Z')
 ```
 
-Get a list of
-[TimeEntries](https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#time-entries)
-in Toggl board.
+Get a list of [TimeEntries](_TimeEntry:_) in Toggl board.
 
+##### <a name="getCurrentTimeEntry"></a>Get current running TimeEntries action
 
+_Definition:_
 
+```ts
+() => object
+```
+Get current running time entry
+
+_Usage:_
+
+```js
+const timeEntries = await togglConnector.getCurrentTimeEntry()
+```
+
+Get an object of [TimeEntry](_TimeEntry:_).
+
+##### <a name="getTimeEntryData"></a>Get TimeEntriy Data action
+
+_Definition:_
+
+```ts
+(teId: number | string) => object
+```
+Get time entry data
+
+_Usage:_
+
+```js
+const timeEntries = await togglConnector.getTimeEntryData(1783760282)
+```
+
+Get an object of [TimeEntry](_TimeEntry:_).
+
+##### <a name="createTimeEntry"></a>Create TimeEntriy action
+
+_Definition:_
+
+```ts
+(timeEntry: TimeEntry) => object
+```
+Get time entry data
+
+_Usage:_
+
+```js
+const timeEntries = await togglConnector.createTimeEntry(1783760282)
+```
+
+Get an object of [TimeEntry](_TimeEntry:_).
 
 #### SDK
 
