@@ -183,7 +183,7 @@ More details about ProjectData available [here](https://github.com/toggl/toggl_a
 
 #### Connector events
 
-All the events are triggered based on changes that occurred in TimeEntries that started during the last 9 days.
+##### All the events are triggered based on changes that occurred only in TimeEntries that started during the last 9 days.
 
 
 ##### <a name="TimeEntryAdded"></a>TimeEntry Added event
