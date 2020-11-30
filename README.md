@@ -41,8 +41,11 @@ app.start(8000)
 
 _Connector events_:
 
+[TimeEntryAdded](#TimeEntryAdded) TimeTracker Added
+
 [TimeEntryModified](#TimeEntryModified) TimeTracker Modified
 
+[TimeEntryRemoved](#TimeEntryRemoved) TimeTracker Removed
 
 _Connector actions_:
 
@@ -180,66 +183,57 @@ More details about ProjectData available [here](https://github.com/toggl/toggl_a
 
 #### Connector events
 
+All the events are triggered based on changes that occurred in TimeEntries that started during the last 9 days.
+
+
 ##### <a name="TimeEntryAdded"></a>TimeEntry Added event
 
 _Event parameters:_
 
 ```
-
-```
-
-_Handler inputs:_
-
-```
-timeEntry: TimeEntry - TimeEntry info
+type: 'TimeEntryAdded' - Event type for added TimeEntry
 ```
 
 _Example:_
 
 ```js
-async (timeEntry) => {
+connector.on({ type: 'TimeEntryAdded' }, async (event, app) => {
   console.log('TimeEntry Added:')
-  console.log('  Id:', timeEntry.id)
-  console.log('  Start:', timeEntry.start)
-  console.log('  Stop:', timeEntry.stop)
-  console.log('  Description:', timeEntry.description)
-}
+  console.log('  Id:', event.id)
+  console.log('  Start:', event.start)
+  console.log('  Stop:', event.stop)
+  console.log('  Description:', event.description)
+})
 ```
 
 This event is triggered once whenever a new TimeEntry is added to the Toggl board.
 
-The `timeEntry` info argument has the [following format](_TimeEntry:_)
+The `timeEntry` argument has the [following format](_TimeEntry:_)
 
 ##### <a name="TimeEntryModified"></a>TimeEntry Modified event
 
 _Event parameters:_
 
 ```
-
-```
-
-_Handler inputs:_
-
-```
-timeEntry: TimeEntry - TimeEntry info
+type: 'TimeEntryModified' - Event type for modified TimeEntry
 ```
 
 _Example:_
 
 ```js
-async (timeEntry) => {
-  console.log('TimeEntry Updated:')
-  console.log('  Id:', timeEntry.id)
-  console.log('  Start:', timeEntry.start)
-  console.log('  Stop:', timeEntry.stop)
-  console.log('  Description:', timeEntry.description)
-}
+connector.on({ type: 'TimeEntryModified' }, async (event, app) => {
+  console.log('TimeEntry Modified:')
+  console.log('  Id:', event.id)
+  console.log('  Start:', event.start)
+  console.log('  Stop:', event.stop)
+  console.log('  Description:', event.description)
+})
 ```
 
 This event is triggered once whenever the content of a TimeEntry in the
 Toggl board is modified.
 
-The `timeEntry` info argument has the [following format](_TimeEntry:_)
+The `timeEntry` argument has the [following format](_TimeEntry:_)
 
 
 ##### <a name="TimeEntryRemoved"></a>TimeEntry Removed event
@@ -247,31 +241,25 @@ The `timeEntry` info argument has the [following format](_TimeEntry:_)
 _Event parameters:_
 
 ```
-
-```
-
-_Handler inputs:_
-
-```
-timeEntry: TimeEntry - TimeEntry info
+type: 'TimeEntryRemoved' - Event type for removed TimeEntry
 ```
 
 _Example:_
 
 ```js
-async (timeEntry) => {
+connector.on({ type: 'TimeEntryRemoved' }, async (event, app) => {
   console.log('TimeEntry Removed:')
-  console.log('  Id:', timeEntry.id)
-  console.log('  Start:', timeEntry.start)
-  console.log('  Stop:', timeEntry.stop)
-  console.log('  Description:', timeEntry.description)
-}
+  console.log('  Id:', event.id)
+  console.log('  Start:', event.start)
+  console.log('  Stop:', event.stop)
+  console.log('  Description:', event.description)
+})
 ```
 
 This event is triggered once whenever a TimeEntry is removed from the
 Toggl board.
 
-The `timeEntry` info argument has the [following format](_TimeEntry:_)
+The `timeEntry` argument has the [following format](_TimeEntry:_)
 
 #### Connector actions
 
