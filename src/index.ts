@@ -50,10 +50,6 @@ export class TogglConnector extends CoreConnector {
     )
 
     if (!oldObjects) {
-      // await this.eventManager.fire(
-      //   (ec) => ec.options.type === 'TimeTrackerInitialized',
-      //   { objects: newObjects },
-      // )
       return
     }
 
