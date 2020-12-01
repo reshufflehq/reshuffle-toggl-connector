@@ -79,7 +79,7 @@ _Connector actions_:
 
 [getClients](#getClients) Get Clients
 
-[getCgetClientDatalients](#getClientData) Get Client's Data
+[getClientData](#getClientData) Get Client's Data
 
 [updateClient](#updateClient) Update Client
 
