@@ -328,7 +328,7 @@ _Usage:_
 ```js
 const timeEntry = await togglConnector.createTimeEntry({
     start:'2020-11-20T09:00:00.000Z',
-    stop : '2020-11-20T11:00:00.000Z',
+    duration : 360,
     description : 'Design meeting',
     tags : ["Design", "Meetings"]})
 ```
