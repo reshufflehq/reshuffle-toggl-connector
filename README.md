@@ -10,7 +10,7 @@ This connector uses [Official Node Toggl Client](https://www.npmjs.com/package/t
 
 _ES6 import_: `import { TogglConnector } from 'reshuffle-toggl-connector'` 
 
-This is a [Reshuffle](https://dev.reshuffle.com) connector that provides an Interface to the Toggl Client.
+This is a [Reshuffle](https://github.com/reshufflehq/reshuffle) connector that provides an Interface to the Toggl Client.
 
 You need to get your Toggl API Token from your account. 
 See more details [here](https://github.com/toggl/toggl_api_docs#api-token)
